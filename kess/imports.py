@@ -1,4 +1,5 @@
 import importlib
+import importlib.util
 from types import ModuleType
 import uuid
 
