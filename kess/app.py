@@ -1,23 +1,22 @@
-import logging
 import os
-from typing import Dict, Generator
+from collections import defaultdict
+from typing import DefaultDict, Dict, Generator
 
-import uvicorn
 from fastapi import FastAPI
 
-from . import env, imports
-from .function import Function
+from kess import env, imports
+from kess.function import Function
 
 
-class App:
-    app: FastAPI
-    functions: Dict[str, Function]
-    logger: logging.Logger
+class App(FastAPI):
+    functions: DefaultDict[str, Dict[str, Function]]
 
-    def __init__(self):
-        self.app = FastAPI()
-        self.functions = {}
-        self.logger = logging.getLogger("fastapi")
+    def __init__(self, *args, **kwargs):
+        self.production = kwargs.pop("production", env.PRODUCTION)
+        self.functions_folder = kwargs.pop("functions_folder", env.FUNCTIONS_FOLDER)
+        self.prefix = kwargs.pop("prefix", env.PREFIX)
+        self.functions = defaultdict(dict)
+        super().__init__(*args, **kwargs)
 
     def scan_prod_functions(
         self, functions_folder: str
@@ -49,19 +48,19 @@ class App:
         yield from scanner(functions_folder)
 
     def setup_function(self, fn: Function, name: str, version: str, prefix: str = ""):
-        fn.setup(name, version)
-        self.app.mount(fn.prefix(), fn.app)
-        self.functions[name] = fn
+        self.mount(f"{prefix}/{name}/{version}", fn)
+        self.functions[name][version] = fn
 
-    def setup(self, **kwargs):
-        production = kwargs.get("production", env.PRODUCTION)
-        functions_folder = kwargs.get("functions_folder", env.FUNCTIONS_FOLDER)
-        prefix = kwargs.get("prefix", env.PREFIX)
+    def setup_functions(
+        self, functions_folder: str, production: bool = False, prefix: str = ""
+    ):
         for name, version, fn in self.scan_functions(
             functions_folder, production=production
         ):
             self.setup_function(fn, name, version, prefix=prefix)
 
-    def run(self, **kwargs):
-        kwargs.pop("reload", None)
-        uvicorn.run(self.app, **kwargs)
+    def setup(self):
+        super().setup()
+        self.setup_functions(
+            self.functions_folder, production=self.production, prefix=self.prefix
+        )

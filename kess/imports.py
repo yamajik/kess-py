@@ -1,7 +1,7 @@
 import importlib
 import importlib.util
-from types import ModuleType
 import uuid
+from types import ModuleType
 
 import_module = importlib.import_module
 reload = importlib.reload
