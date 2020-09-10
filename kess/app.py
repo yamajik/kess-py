@@ -48,7 +48,7 @@ class App:
         scanner = self.scan_prod_functions if production else self.scan_dev_functions
         yield from scanner(functions_folder)
 
-    def setup_function(self, fn: Function, name: str, version: str):
+    def setup_function(self, fn: Function, name: str, version: str, prefix: str = ""):
         fn.setup(name, version)
         self.app.mount(fn.prefix(), fn.app)
         self.functions[name] = fn
@@ -56,10 +56,11 @@ class App:
     def setup(self, **kwargs):
         production = kwargs.get("production", env.PRODUCTION)
         functions_folder = kwargs.get("functions_folder", env.FUNCTIONS_FOLDER)
+        prefix = kwargs.get("prefix", env.PREFIX)
         for name, version, fn in self.scan_functions(
             functions_folder, production=production
         ):
-            self.setup_function(fn, name, version)
+            self.setup_function(fn, name, version, prefix=prefix)
 
     def run(self, **kwargs):
         kwargs.pop("reload", None)
