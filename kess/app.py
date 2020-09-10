@@ -9,12 +9,15 @@ from kess.function import Function
 
 
 class App(FastAPI):
+    production: bool
+    functions_folder: str
+    route_prefix: str
     functions: DefaultDict[str, Dict[str, Function]]
 
     def __init__(self, *args, **kwargs):
         self.production = kwargs.pop("production", env.PRODUCTION)
         self.functions_folder = kwargs.pop("functions_folder", env.FUNCTIONS_FOLDER)
-        self.prefix = kwargs.pop("prefix", env.PREFIX)
+        self.route_prefix = kwargs.pop("router_prefix", env.PREFIX)
         self.functions = defaultdict(dict)
         super().__init__(*args, **kwargs)
 
@@ -62,5 +65,5 @@ class App(FastAPI):
     def setup(self):
         super().setup()
         self.setup_functions(
-            self.functions_folder, production=self.production, prefix=self.prefix
+            self.functions_folder, production=self.production, prefix=self.route_prefix
         )
