@@ -15,7 +15,8 @@ docker build \
 -t ${IMAGE_URL}:${PYTHON_MAJOR_VERSION} \
 -t ${IMAGE_URL}:latest \
 . \
--f ./docker/${ARCH}/${TYPE}/Dockerfile
+-f ./docker/${ARCH}/${TYPE}/Dockerfile \
+${@:5}
 
 docker push ${IMAGE_URL}:${PYTHON_VERSION}-${IMAGE_VERSION}
 docker push ${IMAGE_URL}:${PYTHON_VERSION}
