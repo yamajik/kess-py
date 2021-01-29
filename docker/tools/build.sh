@@ -18,8 +18,8 @@ docker build \
 -f ./docker/${ARCH}/${TYPE}/Dockerfile \
 ${@:5}
 
-docker push ${IMAGE_URL}:${PYTHON_VERSION}-${IMAGE_VERSION}
-docker push ${IMAGE_URL}:${PYTHON_VERSION}
-docker push ${IMAGE_URL}:${PYTHON_MAJOR_VERSION}-${IMAGE_VERSION}
-docker push ${IMAGE_URL}:${PYTHON_MAJOR_VERSION}
-docker push ${IMAGE_URL}:latest
+# docker push ${IMAGE_URL}:${PYTHON_VERSION}-${IMAGE_VERSION}
+# docker push ${IMAGE_URL}:${PYTHON_VERSION}
+# docker push ${IMAGE_URL}:${PYTHON_MAJOR_VERSION}-${IMAGE_VERSION}
+# docker push ${IMAGE_URL}:${PYTHON_MAJOR_VERSION}
+# docker push ${IMAGE_URL}:latest
