@@ -15,7 +15,6 @@ class App(FastAPI):
     functions: DefaultDict[str, Dict[str, Function]]
 
     def __init__(self, *args, **kwargs):
-        self.production = kwargs.pop("production", env.PRODUCTION)
         self.functions_folder = kwargs.pop("functions_folder", env.FUNCTIONS_FOLDER)
         self.route_prefix = kwargs.pop("router_prefix", env.ROUTER_PREFIX)
         self.functions = defaultdict(dict)
@@ -67,5 +66,5 @@ class App(FastAPI):
     def setup(self):
         super().setup()
         self.setup_functions(
-            self.functions_folder, production=self.production, prefix=self.route_prefix
+            self.functions_folder, production=True, prefix=self.route_prefix
         )
