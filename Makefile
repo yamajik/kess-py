@@ -22,8 +22,7 @@ images-push:
 images: images-build images-push
 
 upgrade:
-	poetry version ${UPGRADE}
-	VERSION=$(shell poetry version -s)
+	VERSION=$(shell poetry version ${UPGRADE} -q && poetry version -s)
 	git commit -a -m "ver: ${VERSION}"
 	git tag ${VERSION}
 
