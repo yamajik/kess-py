@@ -1,15 +1,14 @@
-REGISTRY ?= ""
 IMAGE ?= yamajik/kess-python
-VERSION ?= $(poetry version -s)
+VERSION ?= $(shell poetry version -s)
 
 docker-build:
 	docker build docker/kess-python \
-		-t ${REGISTRY}/${IMAGE}:${VERSION} \
-		-t ${REGISTRY}/${IMAGE}:latest
+		-t ${IMAGE}:${VERSION} \
+		-t ${IMAGE}:latest
 
 docker-push:
-	docker push ${REGISTRY}/${IMAGE}:${VERSION}
-	docker push ${REGISTRY}/${IMAGE}:latest
+	docker push ${IMAGE}:${VERSION}
+	docker push ${IMAGE}:latest
 
 images: docker-build docker-push
 
