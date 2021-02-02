@@ -1,6 +1,8 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8-alpine3.10
 
-RUN pip install --no-cache-dir kess
+ARG VERSION
+
+RUN pip install --no-cache-dir kess==${VERSION}
 
 ENV KESS_FUNCTIONS_FOLDER "/app/fn"
 
