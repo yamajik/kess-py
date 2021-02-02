@@ -1,5 +1,6 @@
 IMAGE ?= yamajik/kess-python
 VERSION ?= $(shell poetry version -s)
+UPGRADE ?= minor
 
 pypi-build:
 	poetry build
@@ -19,6 +20,17 @@ images-push:
 	docker push ${IMAGE}:latest
 
 images: images-build images-push
+
+upgrade:
+	poetry version ${UPGRADE}
+	VERSION=$(poetry version -s)
+	git commit -a -m "ver: ${VERSION}"
+	git tag ${VERSION}
+
+release:
+	git checkout master
+	git merge develop
+	git checkout develop
 
 dev:
 	KESS_FUNCTIONS_FOLDER=examples/functions poetry run uvicorn examples.main:app --reload
