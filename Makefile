@@ -13,7 +13,8 @@ pypi: pypi-build pypi-publish
 images-build:
 	docker build . -f docker/kess-python/Dockerfile \
 		-t ${IMAGE}:${VERSION} \
-		-t ${IMAGE}:latest
+		-t ${IMAGE}:latest \
+		--build-arg VERSION=${VERSION}
 
 images-push:
 	docker push ${IMAGE}:${VERSION}
