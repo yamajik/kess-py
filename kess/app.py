@@ -31,7 +31,7 @@ class App(FastAPI):
                     function_file_path = os.path.join(function_path, function_file_name)
                     if os.path.isfile(function_file_path):
                         function_version = os.path.splitext(function_file_name)[0]
-                        module = imports.import_file(function_file_path)
+                        module = imports.import_module(os.path.splitext(function_file_path)[0].replace(os.path.sep, "."))
                         yield function_name, function_version, module.fn
 
     def scan_dev_functions(
@@ -41,8 +41,9 @@ class App(FastAPI):
             function_file_path = os.path.join(functions_folder, function_file_name)
             if os.path.isfile(function_file_path):
                 function_name = os.path.splitext(function_file_name)[0]
-                module = imports.import_file(function_file_path)
-                yield function_name, "latest", module.fn
+                function_version = "latest"
+                module = imports.import_module(os.path.splitext(function_file_path)[0].replace(os.path.sep, "."))
+                yield function_name, function_version, module.fn
 
     def scan_functions(
         self, functions_folder: str, production: bool = False
@@ -51,6 +52,7 @@ class App(FastAPI):
         yield from scanner(functions_folder)
 
     def setup_function(self, fn: Function, name: str, version: str, prefix: str = ""):
+        fn.state.app = self
         self.mount(f"{prefix}/{name}/{version}", fn)
         self.functions[name][version] = fn
 
