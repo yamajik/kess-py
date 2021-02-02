@@ -8,4 +8,4 @@ ENV KESS_LIBRARIES_FOLDER "/kess/lib"
 
 ENV KESS_PRODUCTION true
 
-ADD docker/common/app /app
+ADD examples /app
