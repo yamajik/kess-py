@@ -3,7 +3,6 @@ from collections import defaultdict
 from typing import DefaultDict, Dict, Generator
 
 from fastapi import FastAPI
-import uvicorn
 
 from kess import env, imports
 from kess.function import Function
@@ -70,8 +69,3 @@ class App(FastAPI):
         self.setup_functions(
             self.functions_folder, production=self.production, prefix=self.route_prefix
         )
-
-    def run(self, *args, **kwargs):
-        kwargs.setdefault("host", env.HOST)
-        kwargs.setdefault("port", env.PORT)
-        uvicorn.run(self, *args, **kwargs)
