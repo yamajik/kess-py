@@ -15,7 +15,7 @@ class App(FastAPI):
     functions: DefaultDict[str, Dict[str, Function]]
 
     def __init__(self, *args, **kwargs):
-        self.functions_folder = kwargs.pop("functions_folder", env.FUNCTIONS_FOLDER)
+        self.functions_folder = kwargs.pop("functions_folder", env.FN_FOLDER)
         self.route_prefix = kwargs.pop("router_prefix", env.ROUTER_PREFIX)
         self.functions = defaultdict(dict)
         super().__init__(*args, **kwargs)
