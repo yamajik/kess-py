@@ -22,6 +22,9 @@ images-push:
 
 images: images-build images-push
 
+images-test:
+	docker run --rm -it -p 8000:80 ${IMAGE}:${VERSION}
+
 upgrade:
 	VERSION=$(shell poetry version ${UPGRADE} -q && poetry version -s)
 	git commit -a -m "ver: ${VERSION}"

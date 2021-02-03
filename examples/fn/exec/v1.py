@@ -1,5 +1,5 @@
 from kess import asyncio, HTTPException
-from typing import Optional, Any
+from typing import Optional, List, Dict, Any
 
 from kess import Function
 from pydantic import BaseModel
@@ -47,8 +47,8 @@ class Options(BaseModel):
     key: Optional[str] = None
     type: Optional[str] = None
     func: Optional[str] = None
-    args: Any = None
     force: Optional[bool] = False
+    args: Optional[List] = []
 
 
 @fn.h
@@ -61,9 +61,12 @@ async def execrun(opts: Options):
     if not _main:
         raise HTTPException(status_code=400)
 
-    if opts.type == "process":
-        return await asyncio.run_in_process(_main, opts.args)
-    elif opts.type == "asyncio":
-        return await _main(opts.args)
-    else:
-        return _main(opts.args)
+    try:
+        if opts.type == "process":
+            return await asyncio.run_in_process(_main, *opts.args)
+        elif opts.type == "asyncio":
+            return await _main(*opts.args)
+        else:
+            return _main(*opts.args)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
