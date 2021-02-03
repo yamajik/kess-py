@@ -34,4 +34,4 @@ release:
 	git checkout develop
 
 dev:
-	KESS_FUNCTIONS_FOLDER=examples/functions poetry run uvicorn examples.main:app --reload
+	KESS_FN_FOLDER=examples/fn poetry run uvicorn examples.main:app --reload
