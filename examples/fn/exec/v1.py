@@ -56,7 +56,7 @@ async def execrun(opts: Options):
     _main = None
     if opts.force:
         _main = fn.state.cache.set(opts.key, opts.func)
-    elif opts.key:
+    else:
         _main = fn.state.cache.get(opts.key, opts.func)
     if not _main:
         raise HTTPException(status_code=400)
