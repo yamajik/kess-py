@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kess"
-version = "0.10.2"
+version = "0.10.3"
 description = ""
 authors = ["majik <me@yamajik.com>"]
 
