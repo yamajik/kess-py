@@ -11,14 +11,20 @@ from kess.function import Function
 class App(FastAPI):
     production: bool
     functions_folder: str
-    route_prefix: str
+    runtime_prefix: str
+    runtime_name: str
     functions: DefaultDict[str, Dict[str, Function]]
 
     def __init__(self, *args, **kwargs):
         self.functions_folder = kwargs.pop("functions_folder", env.FN_FOLDER)
-        self.route_prefix = kwargs.pop("router_prefix", env.ROUTER_PREFIX)
+        self.runtime_prefix = kwargs.pop("runtime_prefix", env.RUNTIME_PREFIX)
+        self.runtime_name = kwargs.pop("runtime_name", env.RUNTIME_NAME)
         self.functions = defaultdict(dict)
         super().__init__(*args, **kwargs)
+
+    @property
+    def route_prefix(self):
+        return f"{self.runtime_prefix}/{self.runtime_name}"
 
     def scan_prod_functions(
         self, functions_folder: str
