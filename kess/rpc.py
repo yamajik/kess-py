@@ -28,7 +28,7 @@ class InternalRPC:
         return f"http://{self._runtime}"
 
     def url(self, path):
-        return f"/${self._fn}/${self._version}${path}"
+        return f"/{self._fn}/{self._version}{path}"
 
     async def call(self, **kwargs):
         method = kwargs.pop("method", "post")
@@ -47,6 +47,7 @@ class InternalRPC:
 
     async def __call__(self, **kwargs):
         return await self.post(**kwargs)
+
 
 internal = InternalRPC()
 runtime = internal.runtime
