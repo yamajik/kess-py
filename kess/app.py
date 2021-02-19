@@ -24,7 +24,7 @@ class App(FastAPI):
 
     @property
     def route_prefix(self):
-        return f"{self.runtime_prefix}/{self.runtime_name}"
+        return f"{self.runtime_prefix}"
 
     def scan_prod_functions(
         self, functions_folder: str
