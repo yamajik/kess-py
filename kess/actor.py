@@ -1,4 +1,4 @@
-from typing import Type, Dict, Any
+from typing import Type, Dict, Any, Callable, Union
 
 from dapr import actor
 from dapr.serializers.json import DefaultJSONSerializer
@@ -37,9 +37,14 @@ class ActorProxy(actor.ActorProxy):
         return self._message_serializer.deserialize(resp)
 
 
-def method(name: str = None):
+def method(func_or_name: Union[Callable, str]):
+    if callable(func_or_name):
+        func_or_name.__actormethod__ = func_or_name.__name__
+        print(func_or_name.__actormethod__)
+        return func_or_name
+
     def wrapper(funcobj):
-        funcobj.__actormethod__ = name
+        funcobj.__actormethod__ = func_or_name
         return funcobj
 
     return wrapper
