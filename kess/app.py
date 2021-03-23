@@ -85,7 +85,7 @@ class App(FastAPI):
                 self.mount(f"{prefix}/{name}/{version}", v)
                 self.functions[name][version] = v
             elif inspect.isclass(v) and issubclass(v, actor.Actor):
-                self.actors[name][version] = actor.create(v.__name__, v)
+                self.actors[name][version] = actor.create(v)
 
     def setup_functions(
         self, functions_folder: str, production: bool = True, prefix: str = ""
