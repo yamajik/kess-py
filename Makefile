@@ -1,4 +1,4 @@
-IMAGE ?= yamajik/kess-python
+IMAGE ?= yamajik/kess-py
 VERSION ?= $(shell poetry version -s)
 UPGRADE ?= minor
 
@@ -11,7 +11,7 @@ pypi-publish:
 pypi: pypi-build pypi-publish
 
 images-build:
-	docker build . -f docker/kess-python/Dockerfile \
+	docker build . -f docker/kess-py/Dockerfile \
 		-t ${IMAGE}:${VERSION} \
 		-t ${IMAGE}:latest \
 		--build-arg VERSION=${VERSION}
