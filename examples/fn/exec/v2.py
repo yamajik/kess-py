@@ -1,4 +1,4 @@
-from kess import Actor, actormethod, ActorProxy, actorinvoke
+from kess import Actor, ActorProxy, actormethod,
 
 
 class ExecV2(Actor):
