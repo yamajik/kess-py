@@ -1,7 +1,7 @@
 import importlib
 import importlib.util
-import uuid
 import sys
+import uuid
 from types import ModuleType
 
 import_module = importlib.import_module

@@ -1,7 +1,6 @@
-from kess import asyncio, HTTPException
-from typing import Optional, List, Dict, Any
+from typing import Any, List, Optional
 
-from kess import Function
+from kess import Function, asyncio, method
 from pydantic import BaseModel
 
 
@@ -39,10 +38,6 @@ class Cache:
         return _locals.get(self._funcname)
 
 
-fn = Function()
-fn.state.cache = Cache()
-
-
 class Options(BaseModel):
     key: Optional[str] = None
     type: Optional[str] = None
@@ -51,22 +46,32 @@ class Options(BaseModel):
     args: Optional[List] = []
 
 
-@fn.h
-async def execrun(opts: Options):
-    _main = None
-    if opts.force:
-        _main = fn.state.cache.set(opts.key, opts.func)
-    else:
-        _main = fn.state.cache.get(opts.key, opts.func)
-    if not _main:
-        raise HTTPException(status_code=400)
+class Manager:
+    cache: Cache
 
-    try:
+    def __init__(self):
+        self.cache = Cache()
+
+    async def run(self, opts: Options) -> Any:
+        _main = None
+        if opts.force:
+            _main = self.cache.set(opts.key, opts.func)
+        else:
+            _main = self.cache.get(opts.key, opts.func)
+        if not _main:
+            raise Exception("Require main function")
+
         if opts.type == "process":
             return await asyncio.run_in_process(_main, *opts.args)
         elif opts.type == "asyncio":
             return await _main(*opts.args)
         else:
             return _main(*opts.args)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+
+
+class ExecV1(Function):
+    manager = Manager()
+
+    @method
+    async def execrun(self, opts: Options) -> Any:
+        return await self.manager.run(opts)
