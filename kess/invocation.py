@@ -12,14 +12,14 @@ class InvocationMethod:
     def __call__(self, func_or_path: Union[Callable, str]):
         return self.put(func_or_path)
 
-    def wrap(self, func: Callable, method: str, path: str):
+    def wrap(self, func: Callable, method: str = "PUT", path: str = ""):
         func.__invocationmethod__ = method
         func.__invocationpath__ = path
         return func
 
     def get(self, func_or_path: Union[Callable, str]):
         if callable(func_or_path):
-            return self.wrap(func_or_path, method="GET", path="")
+            return self.wrap(func_or_path, method="GET")
 
         def wrapper(funcobj):
             return self.wrap(funcobj, method="GET", path=f"/{func_or_path}")
@@ -28,7 +28,7 @@ class InvocationMethod:
 
     def post(self, func_or_path: Union[Callable, str]):
         if callable(func_or_path):
-            return self.wrap(func_or_path, method="POST", path="")
+            return self.wrap(func_or_path, method="POST")
 
         def wrapper(funcobj):
             return self.wrap(funcobj, method="POST", path=f"/{func_or_path}")
@@ -37,7 +37,7 @@ class InvocationMethod:
 
     def put(self, func_or_path: Union[Callable, str]):
         if callable(func_or_path):
-            return self.wrap(func_or_path, method="PUT", path="")
+            return self.wrap(func_or_path, method="PUT")
 
         def wrapper(funcobj):
             return self.wrap(funcobj, method="PUT", path=f"/{func_or_path}")
@@ -46,7 +46,7 @@ class InvocationMethod:
 
     def update(self, func_or_path: Union[Callable, str]):
         if callable(func_or_path):
-            return self.wrap(func_or_path, method="UPDATE", path="")
+            return self.wrap(func_or_path, method="UPDATE")
 
         def wrapper(funcobj):
             return self.wrap(funcobj, method="UPDATE", path=f"/{func_or_path}")
@@ -55,7 +55,7 @@ class InvocationMethod:
 
     def delete(self, func_or_path: Union[Callable, str]):
         if callable(func_or_path):
-            return self.wrap(func_or_path, method="DELETE", path="")
+            return self.wrap(func_or_path, method="DELETE")
 
         def wrapper(funcobj):
             return self.wrap(funcobj, method="DELETE", path=f"/{func_or_path}")

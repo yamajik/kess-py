@@ -8,7 +8,7 @@ from dapr.actor import Actor
 from dapr.ext.fastapi import DaprActor
 from fastapi import APIRouter, FastAPI
 
-from kess import actor, env, imports, invocation
+from kess import actor, env, function, imports, invocation
 
 
 class App(FastAPI):
@@ -50,9 +50,12 @@ class App(FastAPI):
         for k, v in module.__dict__.items():
             if k.startswith("_") or not inspect.isclass(v):
                 continue
-            if v is not invocation.Invocation and issubclass(v, invocation.Invocation):
+            if issubclass(v, invocation.Invocation) and v not in (
+                invocation.Invocation,
+                function.Function,
+            ):
                 self.routers.append(invocation.create(v))
-            elif v is not actor.Actor and issubclass(v, actor.Actor):
+            if issubclass(v, actor.Actor) and v not in (actor.Actor, function.Function):
                 self.actors.append(actor.create(v))
 
     def setup_functions(self, functions_folder: str):
