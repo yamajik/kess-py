@@ -1,4 +1,4 @@
-from kess import Actor, ActorProxy, actormethod,
+from kess import Actor, ActorProxy, actormethod
 
 
 class ExecV2(Actor):
@@ -8,7 +8,10 @@ class ExecV2(Actor):
 
     @actormethod("apiv2")
     async def apiv2(self, data: object) -> object:
-        return {"data": "apiv2", **await ActorProxy(name="ExecV2").invoke("apiv4", data=data)}
+        return {
+            "data": "apiv2",
+            **await ActorProxy(name="ExecV2").invoke("apiv4", data=data),
+        }
 
     @actormethod("apiv4")
     async def apiv3(self, data: object) -> object:
