@@ -49,3 +49,5 @@ m = method = FunctionMethod(actor.method, invocation.method)
 
 create_actor = actor.create
 create_router = invocation.create
+create_proxy = actor.create_proxy
+invoke = actor.invoke
