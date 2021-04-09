@@ -23,9 +23,9 @@ class FunctionMethod:
         return self.m(func_or_name)
 
     def wrap(self, func: Callable, name: str):
-        self.actormethod.wrap(func, name)
-        self.invocationmethod.wrap(func, path=f"/{name}")
-        return func
+        return self.actormethod.wrap(func, name)
+        # self.invocationmethod.wrap(func, path=f"/{name}")
+        # return func
 
     def m(self, func_or_name: Union[Callable, str]):
         if callable(func_or_name):

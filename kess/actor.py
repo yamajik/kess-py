@@ -1,7 +1,12 @@
+import functools
+import inspect
 from typing import Any, Callable, Dict, Type, Union
 
 from dapr import actor
 from dapr.serializers.json import DefaultJSONSerializer
+from fastapi.dependencies import utils as fastapiutils
+from pydantic import utils as pydanticuilts
+from pydantic.main import BaseModel
 
 defaultJSONSerializer = DefaultJSONSerializer()
 
@@ -43,7 +48,19 @@ class ActorMethod:
 
     def wrap(self, func: Callable, name: str):
         func.__actormethod__ = name
-        return func
+
+        ModelClass = None
+        for _, value in fastapiutils.get_typed_signature(func).parameters.items():
+            if inspect.isclass(value.annotation) and issubclass(value.annotation, BaseModel):
+                ModelClass = value.annotation
+
+        @functools.wraps(func)
+        def _wrapper(self, data):
+            if ModelClass is not None:
+                data = ModelClass(**data)
+            return func(self, data)
+
+        return _wrapper
 
     def m(self, func_or_name: Union[Callable, str]):
         if callable(func_or_name):
